@@ -1,10 +1,7 @@
 package com.example.demo.user.service;
 
-import com.example.demo.user.infrastructure.UserEntity;
 import com.example.demo.user.service.port.MailSender;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -17,7 +14,7 @@ public class CertificationService {
         String certificationUrl = generateCertificationUrl(userId, certificationCode);
         String title = "Please certify your email address";
         String content = "Please click the following link to certify your email address: " + certificationUrl;
-        mailSender.send(email, title, certificationUrl);
+        mailSender.send(email, title, content);
 
     }
 
