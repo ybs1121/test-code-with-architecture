@@ -1,13 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.UserStatus;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.user.domain.dto.UserCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -51,7 +46,7 @@ class UserCreateControllerTest {
     void 사용자는_내_정보를_생성할수있다() throws Exception {
 
         // Given
-        UserCreateDto userCreateDto = UserCreateDto.builder()
+        UserCreate userCreate = UserCreate.builder()
                 .nickname("test-n")
                 .address("busan")
                 .email("test3@naver.com")
@@ -62,7 +57,7 @@ class UserCreateControllerTest {
         mockMvc.perform(post("/api/users")
                         .header("EMAIL", "test3@naver.com")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userCreateDto))
+                        .content(objectMapper.writeValueAsString(userCreate))
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())

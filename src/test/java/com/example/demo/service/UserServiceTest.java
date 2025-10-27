@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.CertificationCodeNotMatchedException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.UserStatus;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
+import com.example.demo.user.exception.CertificationCodeNotMatchedException;
+import com.example.demo.user.exception.ResourceNotFoundException;
+import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.domain.dto.UserCreate;
+import com.example.demo.user.domain.dto.UserUpdate;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,8 +17,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -90,7 +88,7 @@ class UserServiceTest {
     @Test
     void userCreateDto_를_이용해서_유저를_생성할_수_있다() {
         // Given
-        UserCreateDto createDto = UserCreateDto.builder()
+        UserCreate createDto = UserCreate.builder()
                 .email("test3@test.com")
                 .address("NewYork")
                 .nickname("test3")
@@ -107,7 +105,7 @@ class UserServiceTest {
     @Test
     void userUpdateDto_를_이용해서_유저를_수정할_수_있다() {
         // Given
-        UserUpdateDto updateDto = UserUpdateDto.builder()
+        UserUpdate updateDto = UserUpdate.builder()
                 .address("NewYork")
                 .nickname("test3-n")
                 .build();
