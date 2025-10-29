@@ -1,10 +1,11 @@
 package com.example.demo.user.service;
 
+import com.example.demo.user.domain.User;
 import com.example.demo.user.exception.CertificationCodeNotMatchedException;
 import com.example.demo.user.exception.ResourceNotFoundException;
 import com.example.demo.user.domain.UserStatus;
-import com.example.demo.user.domain.dto.UserCreate;
-import com.example.demo.user.domain.dto.UserUpdate;
+import com.example.demo.user.domain.UserCreate;
+import com.example.demo.user.domain.UserUpdate;
 import com.example.demo.user.infrastructure.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -42,7 +43,7 @@ class UserServiceTest {
         // Given
         String email = "test@naver.com";
         // When
-        UserEntity result = userService.getByEmail(email);
+        User result = userService.getByEmail(email);
         // Then
         assertThat(result.getNickname()).isEqualTo("test");
     }
@@ -54,7 +55,7 @@ class UserServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> {
-            UserEntity result = userService.getByEmail(email);
+            User result = userService.getByEmail(email);
 
         }).isInstanceOf(ResourceNotFoundException.class);
 
@@ -65,7 +66,7 @@ class UserServiceTest {
         // Given
         String email = "test@naver.com";
         // When
-        UserEntity result = userService.getById(1);
+        User result = userService.getById(1);
         // Then
         assertThat(result.getNickname()).isEqualTo("test");
     }
@@ -77,7 +78,7 @@ class UserServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> {
-            UserEntity result = userService.getById(2);
+            User result = userService.getById(2);
 
         }).isInstanceOf(ResourceNotFoundException.class);
 
@@ -94,7 +95,7 @@ class UserServiceTest {
                 .build();
         BDDMockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
         // When
-        UserEntity result = userService.create(createDto);
+        User result = userService.create(createDto);
         // Then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
@@ -110,9 +111,9 @@ class UserServiceTest {
                 .build();
 
         // When
-        UserEntity result = userService.update(1, updateDto);
+        User result = userService.update(1, updateDto);
         // Then
-        UserEntity userEntity = userService.getById(result.getId());
+        User userEntity = userService.getById(result.getId());
         assertThat(result.getId()).isNotNull();
         assertThat(userEntity.getAddress()).isEqualTo("NewYork");
         assertThat(userEntity.getNickname()).isEqualTo("test3-n");
@@ -126,7 +127,7 @@ class UserServiceTest {
         // When
         userService.login(1);
         // Then
-        UserEntity userEntity = userService.getById(1);
+        User userEntity = userService.getById(1);
 
 //        assertThat(userEntity.getLastLoginAt()).isEqualTo(???);
         assertThat(userEntity.getLastLoginAt()).isGreaterThan(0);
@@ -140,7 +141,7 @@ class UserServiceTest {
         // When
         userService.verifyEmail(2, "aaaaaaaa-aaa-aaa-aaaaaaa");
         // Then
-        UserEntity user = userService.getById(2);
+        User user = userService.getById(2);
         assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
 
     }
