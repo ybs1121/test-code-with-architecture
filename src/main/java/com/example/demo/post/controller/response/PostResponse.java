@@ -21,6 +21,7 @@ public class PostResponse {
         PostResponse.setContent(post.getContent());
         PostResponse.setCreatedAt(post.getCreatedAt());
         PostResponse.setModifiedAt(post.getModifiedAt());
+        PostResponse.setContent(post.getContent());
         PostResponse.setWriter(UserResponse.from(post.getWriter()));
         return PostResponse;
     }

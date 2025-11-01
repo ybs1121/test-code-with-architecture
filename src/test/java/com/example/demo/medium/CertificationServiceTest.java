@@ -1,7 +1,8 @@
-package com.example.demo.user.service;
+package com.example.demo.medium;
 
 
 import com.example.demo.user.mock.FakeMailSender;
+import com.example.demo.user.service.CertificationService;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,5 +1,7 @@
 package com.example.demo.user.service;
 
+import com.example.demo.common.ClockHolder;
+import com.example.demo.common.UuidHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.exception.CertificationCodeNotMatchedException;
 import com.example.demo.user.exception.ResourceNotFoundException;
@@ -13,16 +15,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.example.demo.user.service.port.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UuidHolder uuidHolder;
     private final CertificationService certificationService;
+    private final ClockHolder clockHolder;
 
     public Optional<User> findById(long id) {
         return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE);
@@ -40,7 +46,7 @@ public class UserService {
 
     @Transactional
     public User create(UserCreate userCreate) {
-        User user = User.from(userCreate);
+        User user = User.from(userCreate, uuidHolder);
         user = userRepository.save(user);
         String certificationUrl = certificationService.generateCertificationUrl(user.getId(), user.getCertificationCode());
         certificationService.send(userCreate.getEmail(), user.getId(), certificationUrl);
@@ -58,7 +64,7 @@ public class UserService {
     @Transactional
     public void login(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
-        user = user.login();
+        user = user.login(clockHolder);
         userRepository.save(user);
     }
 

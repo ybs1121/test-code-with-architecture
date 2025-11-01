@@ -1,12 +1,15 @@
 package com.example.demo.user.domain;
 
 
+import com.example.demo.common.ClockHolder;
+import com.example.demo.common.UuidHolder;
+import com.example.demo.user.exception.CertificationCodeNotMatchedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Clock;
-import java.util.UUID;
+
 
 @AllArgsConstructor
 @Builder
@@ -21,13 +24,13 @@ public class User {
     private UserStatus status;
     private Long lastLoginAt;
 
-    public static User from(UserCreate userCreate) {
+    public static User from(UserCreate userCreate, UuidHolder uuidHolder) {
         return User.builder()
                 .email(userCreate.getEmail())
                 .nickname(userCreate.getNickname())
                 .address(userCreate.getAddress())
                 .status(UserStatus.PENDING)
-                .certificationCode(UUID.randomUUID().toString())
+                .certificationCode(uuidHolder.random())
                 .build();
     }
 
@@ -43,7 +46,7 @@ public class User {
                 .build();
     }
 
-    public User login() {
+    public User login(ClockHolder clockHolder) {
         return User.builder()
                 .id(id)
                 .email(email)
@@ -51,11 +54,14 @@ public class User {
                 .address(address)
                 .certificationCode(certificationCode)
                 .status(status)
-                .lastLoginAt(Clock.systemUTC().millis())
+                .lastLoginAt(clockHolder.millis())
                 .build();
     }
 
     public User certificate(String certificationCode) {
+        if (!this.certificationCode.equals(certificationCode)) {
+            throw new CertificationCodeNotMatchedException();
+        }
         return User.builder()
                 .id(id)
                 .email(email)
